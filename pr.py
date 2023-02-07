@@ -2,6 +2,7 @@ import subprocess
 import os
 import requests
 import logging
+import json
 from subprocess import call
 import sys
 from git import Repo
@@ -26,6 +27,6 @@ try :
 except subprocess.CalledProcessError as e:
     print(e)
 finally:
-    status = repo.git.status()
+    status = json.dumps(repo.git.status(porcelain=True))
     print(status)
   

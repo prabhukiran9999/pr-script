@@ -8,8 +8,8 @@ jobs:
     runs-on: ubuntu-latest
     
     steps:
-    - uses: jakejarvis/wait-action@master
     - name: Sleep for 30 seconds
+      uses: jakejarvis/wait-action@master
       with:
         time: '30s'
     - uses: actions/checkout@v1

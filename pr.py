@@ -27,6 +27,7 @@ try :
 except subprocess.CalledProcessError as e:
     print(e)
 finally:
-    status = json.dumps(repo.git.status(porcelain=True))
-    print(status)
+    status =str((repo.git.status(porcelain=True)))
+    print(str(status))
+
   

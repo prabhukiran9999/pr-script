@@ -1,14 +1,7 @@
-title:	 created a new project set
-state:	OPEN
-author:	prabhukiran9999
-labels:	
-assignees:	
-reviewers:	svalmiki1102 (Approved)
-projects:	
-milestone:	
-number:	29
-url:	https://github.com/prabhukiran9999/pr-script/pull/29
-additions:	2
-deletions:	1
---
- created a new project set using provisonor script
+On branch dev
+Changes not staged for commit:
+  (use "git add <file>..." to update what will be committed)
+  (use "git restore <file>..." to discard changes in working directory)
+	modified:   output.txt
+
+no changes added to commit (use "git add" and/or "git commit -a")

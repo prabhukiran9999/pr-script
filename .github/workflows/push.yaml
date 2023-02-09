@@ -1,8 +1,6 @@
 name: CI
-on: 
-  push:
-    branches:
-      - main
+
+on: [push]
 
 jobs:
   build:
@@ -10,6 +8,10 @@ jobs:
     runs-on: ubuntu-latest
     
     steps:
+    - name: Sleep for 30 seconds
+      uses: jakejarvis/wait-action@master
+      with:
+        time: '30s'
     - uses: actions/checkout@v1
     - name: Run a one-line script
       run: echo Hello, world!

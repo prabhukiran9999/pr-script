@@ -30,17 +30,21 @@ try :
 except subprocess.CalledProcessError as e:
     print(e)
 
-# project_Set_info = subprocess.Popen(["git", "ls-files", "--others", "--directory", "--exclude-standard"],stdout=subprocess.PIPE).communicate()[0].decode("utf-8").rstrip()
-checkout_branch = "ProjectSet-Automation"
+project_Set_info = subprocess.Popen(["git", "ls-files", "--others", "--directory", "--exclude-standard"],stdout=subprocess.PIPE).communicate()[0].decode("utf-8").rstrip()
+checkout_branch_name = project_Set_info.strip("/")
+print(checkout_branch_name)
 #Create a new branch
-branch_info = repo.git.branch(checkout_branch)
+checkout_branch = repo.git.checkout('-b', checkout_branch_name)
+# Push the branch
+repo.git.push("origin", checkout_branch_name)
+print("branch pushed successfully")
 #To do Get the Folder info the script created
 # PATH_OF_GIT_REPO = r'./.git'  # make sure .git folder is properly configured
 COMMIT_MESSAGE = 'comment from python script'
 
 def git_push():
     # To do add a section to creaate a branch and checkout to new branch
-    branch = branch_info
+    branch = checkout_branch_name
     repo = Repo('.')
     repo.git.add(all=True)
     repo.index.commit(COMMIT_MESSAGE)
@@ -49,6 +53,7 @@ def git_push():
 
 git_push()
 
+time.sleep(5)
 create_pr = subprocess.Popen(["gh", "pr", "create", "-t created a new project set", "-b created a new project set using provisonor script", "-rsvalmiki1102"],stdout=subprocess.PIPE).communicate()[0] 
 pr_url = create_pr.decode("utf-8").rstrip() 
 # pr_url = create_pr.strip("b'") 

@@ -69,7 +69,7 @@ print(pr_url)
 # check_pr = subprocess.Popen(["gh", "pr", "checks", pr_url, "--watch"],stdout=subprocess.PIPE).communicate()[0].decode("utf-8").rstrip()
 check_pr = json.loads(subprocess.Popen(["gh", "pr", "view", pr_url, "--json", "statusCheckRollup"],stdout=subprocess.PIPE).communicate()[0].decode("utf-8").rstrip())
 print(check_pr)
-workflow_id = str(json.loads(subprocess.Popen(["gh", "run", "list", "-b", "ProjectSet-Automation", "-L", "1", "--json", "databaseId"],stdout=subprocess.PIPE).communicate()[0])[0]['databaseId'])
+workflow_id = str(json.loads(subprocess.Popen(["gh", "run", "list", "-b", checkout_branch_name, "-L", "1", "--json", "databaseId"],stdout=subprocess.PIPE).communicate()[0])[0]['databaseId'])
 def pr_workflow_status(workflow_id,pr_url):
     # workflow_id = str(json.loads(subprocess.Popen(["gh", "run", "list", "-b", "dev", "-L", "1", "--json", "databaseId"],stdout=subprocess.PIPE).communicate()[0])[0]['databaseId'])
     workflow_status = ""
@@ -148,7 +148,7 @@ time.sleep(5) #Sleep for 5 secs
 # print(type(layer_pr))
 print(pr_url)
 
-workflow_id = str(json.loads(subprocess.Popen(["gh", "run", "list", "-b", "ProjectSet-Automation", "-L", "1", "--json", "databaseId"],stdout=subprocess.PIPE).communicate()[0])[0]['databaseId'])
+workflow_id = str(json.loads(subprocess.Popen(["gh", "run", "list", "-b", checkout_branch_name, "-L", "1", "--json", "databaseId"],stdout=subprocess.PIPE).communicate()[0])[0]['databaseId'])
 pr_workflow_status(workflow_id,pr_url)
 time.sleep(5)
 push_workflow_id = str(json.loads(subprocess.Popen(["gh", "run", "list", "-b", "main", "-L", "1", "--json", "databaseId"],stdout=subprocess.PIPE).communicate()[0])[0]['databaseId'])

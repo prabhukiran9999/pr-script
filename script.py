@@ -53,7 +53,7 @@ def git_push():
 
 git_push()
 
-time.sleep()
+time.sleep(5)
 create_pr = subprocess.Popen(["gh", "pr", "create", "-t created a new project set", "-b created a new project set using provisonor script", "-rsvalmiki1102"],stdout=subprocess.PIPE).communicate()[0] 
 pr_url = create_pr.decode("utf-8").rstrip() 
 # pr_url = create_pr.strip("b'") 

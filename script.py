@@ -31,16 +31,16 @@ except subprocess.CalledProcessError as e:
     print(e)
 
 # project_Set_info = subprocess.Popen(["git", "ls-files", "--others", "--directory", "--exclude-standard"],stdout=subprocess.PIPE).communicate()[0].decode("utf-8").rstrip()
-checkout_branch = "ProjectSet-Automation"
+# checkout_branch = "ProjectSet-Automation"
 #Create a new branch
-branch_info = repo.git.branch(checkout_branch)
+checkout_branch = repo.git.branch('ProjectSet-Automation')
 #To do Get the Folder info the script created
 # PATH_OF_GIT_REPO = r'./.git'  # make sure .git folder is properly configured
 COMMIT_MESSAGE = 'comment from python script'
 
 def git_push():
     # To do add a section to creaate a branch and checkout to new branch
-    branch = branch_info
+    branch = "ProjectSet-Automation"
     repo = Repo('.')
     repo.git.add(all=True)
     repo.index.commit(COMMIT_MESSAGE)

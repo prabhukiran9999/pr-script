@@ -41,7 +41,7 @@ print("branch pushed successfully")
 #To do Get the Folder info the script created
 # PATH_OF_GIT_REPO = r'./.git'  # make sure .git folder is properly configured
 COMMIT_MESSAGE = 'comment from python script'
-time.sleep(5)
+
 def git_push():
     # To do add a section to creaate a branch and checkout to new branch
     branch = checkout_branch_name
@@ -53,6 +53,7 @@ def git_push():
 
 git_push()
 
+time.sleep(5)
 create_pr = subprocess.Popen(["gh", "pr", "create", "-t created a new project set", "-b created a new project set using provisonor script", "-rsvalmiki1102"],stdout=subprocess.PIPE).communicate()[0] 
 pr_url = create_pr.decode("utf-8").rstrip() 
 # pr_url = create_pr.strip("b'") 

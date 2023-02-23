@@ -36,11 +36,8 @@ checkout_branch_name = project_Set_info.strip("/")
 print(checkout_branch_name)
 #Create a new branch
 checkout_branch = repo.git.checkout('-b', checkout_branch_name)
-# Push the branch
-repo.git.push("origin", checkout_branch_name)
-print("branch pushed successfully")
-#To do Get the Folder info the script created
-# PATH_OF_GIT_REPO = r'./.git'  # make sure .git folder is properly configured
+
+
 COMMIT_MESSAGE = 'comment from python script'
 
 def git_push():

@@ -1,4 +1,5 @@
 import subprocess
+import os
 import json
 from subprocess import call
 import time
@@ -9,6 +10,12 @@ ATH_OF_GIT_REPO = r'.\.git'
 repo = Repo(pk_repo_path)
 subprocess.run(["ls", "-l", "/dev/null"], capture_output=True)
 gh_version = call(["gh", "--version"])
+
+# Replace TOKEN with your personal access token
+token = os.getenv("token")
+
+# Execute the `gh auth login` command and provide your personal access token as input
+subprocess.run(["gh", "auth", "login", "--with-token"], input=f"{token}\n", text=True)
 
 try :
     subprocess.call(['./project_set_admin.sh'])

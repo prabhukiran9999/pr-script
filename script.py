@@ -137,7 +137,8 @@ push_workflow_id = str(json.loads(subprocess.Popen(["gh", "run", "list", "-b", "
 push_status = push_workflow_status(push_workflow_id)
 print(push_status)
 
-# Delete the branch locally
+#Checkout to main and  Delete the branch locally
+subprocess.run(f"git checkout main", shell=True)
 subprocess.run(f"git branch -D {checkout_branch_name}", shell=True)
 
 # Delete the branch remotely

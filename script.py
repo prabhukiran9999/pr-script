@@ -35,7 +35,7 @@ project_Set_info = subprocess.Popen(["git", "ls-files", "--others", "--directory
 checkout_branch_name = project_Set_info.strip("/")
 print(checkout_branch_name)
 #Create a new branch
-checkout_branch = repo.git.branch(checkout_branch_name)
+# checkout_branch = repo.git.branch(checkout_branch_name)
 # Checkout to the branch name
 subprocess.run(f"git checkout -b {checkout_branch_name}", shell=True)
 # # Push the branch

@@ -1,5 +1,6 @@
 import subprocess
 import os
+import re
 import requests
 import logging
 import json
@@ -155,3 +156,13 @@ push_workflow_id = str(json.loads(subprocess.Popen(["gh", "run", "list", "-b", "
 
 push_status = push_workflow_status(push_workflow_id)
 print(push_status)
+
+# Delete the branch locally
+subprocess.run(f"git branch -D {checkout_branch_name}", shell=True)
+
+# Delete the branch remotely
+subprocess.run(f"git push origin --delete {checkout_branch_name}", shell=True)
+
+# git checkout master
+# git branch -d checkout_branch
+# git push origin

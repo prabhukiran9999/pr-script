@@ -1,11 +1,6 @@
 import subprocess
-import os
-import re
-import requests
-import logging
 import json
 from subprocess import call
-import sys
 import time
 import git
 from git import Repo
@@ -57,7 +52,7 @@ check_pr = json.loads(subprocess.Popen(["gh", "pr", "view", pr_url, "--json", "s
 print(check_pr)
 workflow_id = str(json.loads(subprocess.Popen(["gh", "run", "list", "-b", checkout_branch_name, "-L", "1", "--json", "databaseId"],stdout=subprocess.PIPE).communicate()[0])[0]['databaseId'])
 
-
+# Function to get the pull request workflow status and merge the PR once the workflow status are successful
 def pr_workflow_status(workflow_id,pr_url):
     workflow_status = ""
     while workflow_status != "completed":
@@ -81,7 +76,7 @@ def pr_workflow_status(workflow_id,pr_url):
         elif workflow_status =="failed":
             print("Push workflow failed")
             break
-
+# Function to get the Push workflow status
 def push_workflow_status(push_workflow_id):
     push_workflow_status = ""
     while push_workflow_status != "completed":
@@ -108,6 +103,7 @@ push_workflow_id = str(json.loads(subprocess.Popen(["gh", "run", "list", "-b", "
 push_status = push_workflow_status(push_workflow_id)
 print(push_status)
 
+# Create layers if push workflow status are succesfull
 if push_status == "completed":
     try :
         layer_creation = subprocess.call(['./project_set_admin.sh'])
@@ -125,6 +121,7 @@ git_push()
 layer_pr = subprocess.Popen(["gh", "pr", "create", "-t created a new project set", "-b created a new project set using provisonor script", "-rsvalmiki1102"],stdout=subprocess.PIPE).communicate()[0] 
 pr_url = layer_pr.decode("utf-8").rstrip() 
 print ('Pull_request for layers created successfully')
+
 # #Sleep for 5 sec after pull request is created so the actions will register
 time.sleep(5) #Sleep for 5 secs
 print(pr_url)
@@ -133,7 +130,6 @@ workflow_id = str(json.loads(subprocess.Popen(["gh", "run", "list", "-b", checko
 pr_workflow_status(workflow_id,pr_url)
 time.sleep(5)
 push_workflow_id = str(json.loads(subprocess.Popen(["gh", "run", "list", "-b", "main", "-L", "1", "--json", "databaseId"],stdout=subprocess.PIPE).communicate()[0])[0]['databaseId'])
-
 push_status = push_workflow_status(push_workflow_id)
 print(push_status)
 

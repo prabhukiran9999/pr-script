@@ -14,17 +14,6 @@ ATH_OF_GIT_REPO = r'.\.git'
 repo = Repo(pk_repo_path)
 subprocess.run(["ls", "-l", "/dev/null"], capture_output=True)
 gh_version = call(["gh", "--version"])
-logging.info("authenticating to github with token" )
-#Logging into GitHub using Token
-# GH_TOKEN = os.environ['GH_TOKEN']
-# username = 'prabhukiran9999'
-# github_login = requests.get('https://api.github.com/user', auth=(username,GH_TOKEN))
-# if github_login.status_code == 200:
-#     print ('logged into github successfully!')
-# else:
-#     print ('logged into github failed')
-
-# Execute project cteation script
 
 try :
     subprocess.call(['./project_set_admin.sh'])
@@ -34,6 +23,7 @@ except subprocess.CalledProcessError as e:
 project_Set_info = subprocess.Popen(["git", "ls-files", "--others", "--directory", "--exclude-standard"],stdout=subprocess.PIPE).communicate()[0].decode("utf-8").rstrip()
 checkout_branch_name = project_Set_info.strip("/")
 print(checkout_branch_name)
+
 #Create a new branch
 checkout_branch = repo.git.checkout('-b', checkout_branch_name)
 

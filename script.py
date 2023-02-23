@@ -35,14 +35,12 @@ project_Set_info = subprocess.Popen(["git", "ls-files", "--others", "--directory
 checkout_branch_name = project_Set_info.strip("/")
 print(checkout_branch_name)
 #Create a new branch
-checkout_branch = repo.git.branch(checkout_branch_name)
-# Checkout to the branch name
-subprocess.run(f"git checkout -b {checkout_branch_name}", shell=True)
-# # Push the branch
-# repo.git.push("origin", checkout_branch_name)
-# print("branch pushed successfully")
-# time.sleep(5)
-
+checkout_branch = repo.git.checkout('-b', checkout_branch_name)
+# Push the branch
+repo.git.push("origin", checkout_branch_name)
+print("branch pushed successfully")
+#To do Get the Folder info the script created
+# PATH_OF_GIT_REPO = r'./.git'  # make sure .git folder is properly configured
 COMMIT_MESSAGE = 'comment from python script'
 
 def git_push():
@@ -72,7 +70,7 @@ print(pr_url)
 # check_pr = subprocess.Popen(["gh", "pr", "checks", pr_url, "--watch"],stdout=subprocess.PIPE).communicate()[0].decode("utf-8").rstrip()
 check_pr = json.loads(subprocess.Popen(["gh", "pr", "view", pr_url, "--json", "statusCheckRollup"],stdout=subprocess.PIPE).communicate()[0].decode("utf-8").rstrip())
 print(check_pr)
-workflow_id = str(json.loads(subprocess.Popen(["gh", "run", "list", "-b", "ProjectSet-Automation", "-L", "1", "--json", "databaseId"],stdout=subprocess.PIPE).communicate()[0])[0]['databaseId'])
+workflow_id = str(json.loads(subprocess.Popen(["gh", "run", "list", "-b", checkout_branch_name, "-L", "1", "--json", "databaseId"],stdout=subprocess.PIPE).communicate()[0])[0]['databaseId'])
 def pr_workflow_status(workflow_id,pr_url):
     # workflow_id = str(json.loads(subprocess.Popen(["gh", "run", "list", "-b", "dev", "-L", "1", "--json", "databaseId"],stdout=subprocess.PIPE).communicate()[0])[0]['databaseId'])
     workflow_status = ""
@@ -151,7 +149,7 @@ time.sleep(5) #Sleep for 5 secs
 # print(type(layer_pr))
 print(pr_url)
 
-workflow_id = str(json.loads(subprocess.Popen(["gh", "run", "list", "-b", "ProjectSet-Automation", "-L", "1", "--json", "databaseId"],stdout=subprocess.PIPE).communicate()[0])[0]['databaseId'])
+workflow_id = str(json.loads(subprocess.Popen(["gh", "run", "list", "-b", checkout_branch_name, "-L", "1", "--json", "databaseId"],stdout=subprocess.PIPE).communicate()[0])[0]['databaseId'])
 pr_workflow_status(workflow_id,pr_url)
 time.sleep(5)
 push_workflow_id = str(json.loads(subprocess.Popen(["gh", "run", "list", "-b", "main", "-L", "1", "--json", "databaseId"],stdout=subprocess.PIPE).communicate()[0])[0]['databaseId'])

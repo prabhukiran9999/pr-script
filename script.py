@@ -15,25 +15,24 @@ try :
 except subprocess.CalledProcessError as e:
     print(e)
 
+# Get the project-set name created
 project_Set_info = subprocess.Popen(["git", "ls-files", "--others", "--directory", "--exclude-standard"],stdout=subprocess.PIPE).communicate()[0].decode("utf-8").rstrip()
 checkout_branch_name = project_Set_info.strip("/")
 print(checkout_branch_name)
 
-#Create a new branch
+#Create a new branch with the name of the project set created
 checkout_branch = repo.git.checkout('-b', checkout_branch_name)
 
-
+# Commit message for Push
 COMMIT_MESSAGE = 'comment from python script'
 
 def git_push():
-    # To do add a section to creaate a branch and checkout to new branch
     branch = checkout_branch_name
     repo = Repo('.')
     repo.git.add(all=True)
     repo.index.commit(COMMIT_MESSAGE)
     repo.git.push('origin', branch)
     
-
 git_push()
 time.sleep(5)
 
@@ -76,6 +75,7 @@ def pr_workflow_status(workflow_id,pr_url):
         elif workflow_status =="failed":
             print("Push workflow failed")
             break
+
 # Function to get the Push workflow status
 def push_workflow_status(push_workflow_id):
     push_workflow_status = ""
@@ -91,7 +91,7 @@ def push_workflow_status(push_workflow_id):
         elif push_workflow_status == "completed":
             print(push_workflow_status)
             return push_workflow_status
-        elif workflow_status =="failed":
+        elif push_workflow_status =="failed":
             print("Push workflow failed")
             return push_workflow_status
 

@@ -66,7 +66,7 @@ def pr_workflow_status(workflow_id,pr_url):
         if workflow_status =='queued':
             print(workflow_status)
             continue
-        elif workflow_status == " ":
+        elif workflow_status == "in_progress":
             print(workflow_status)
             continue
         elif workflow_status == "completed":

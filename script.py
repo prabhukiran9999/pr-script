@@ -40,12 +40,11 @@ def git_push():
     
 
 git_push()
-
 time.sleep(5)
+
+## Create Pull reequest and sleep for 5 min
 create_pr = subprocess.Popen(["gh", "pr", "create", "-t created a new project set", "-b created a new project set using provisonor script", "-rsvalmiki1102"],stdout=subprocess.PIPE).communicate()[0] 
 pr_url = create_pr.decode("utf-8").rstrip() 
-# pr_url = create_pr.strip("b'") 
-# print(creaate_pr)
 print ('Pull_request created successfully')
 #Sleep for 5 sec after pull request is created so the actions will register
 time.sleep(5) #Sleep for 5 secs
@@ -54,22 +53,20 @@ print(pr_url)
 
 # Check for pull request actions to complete
 
-# check_pr = subprocess.Popen(["gh", "pr", "checks", pr_url, "--watch"],stdout=subprocess.PIPE).communicate()[0].decode("utf-8").rstrip()
 check_pr = json.loads(subprocess.Popen(["gh", "pr", "view", pr_url, "--json", "statusCheckRollup"],stdout=subprocess.PIPE).communicate()[0].decode("utf-8").rstrip())
 print(check_pr)
 workflow_id = str(json.loads(subprocess.Popen(["gh", "run", "list", "-b", checkout_branch_name, "-L", "1", "--json", "databaseId"],stdout=subprocess.PIPE).communicate()[0])[0]['databaseId'])
+
+
 def pr_workflow_status(workflow_id,pr_url):
-    # workflow_id = str(json.loads(subprocess.Popen(["gh", "run", "list", "-b", "dev", "-L", "1", "--json", "databaseId"],stdout=subprocess.PIPE).communicate()[0])[0]['databaseId'])
     workflow_status = ""
     while workflow_status != "completed":
         workflow_status = json.loads(subprocess.Popen(["gh", "run", "view", workflow_id, "--json", "status"],stdout=subprocess.PIPE).communicate()[0])['status']
         print(workflow_status)
         if workflow_status =='queued':
             print(workflow_status)
-            # workflow_status = json.loads(subprocess.Popen(["gh", "pr", "view", pr_url, "--json", "statusCheckRollup"],stdout=subprocess.PIPE).communicate()[0].decode("utf-8").rstrip())["statusCheckRollup"][0]['status']
             continue
         elif workflow_status == " ":
-            # workflow_status = json.loads(subprocess.Popen(["gh", "pr", "view", pr_url, "--json", "statusCheckRollup"],stdout=subprocess.PIPE).communicate()[0].decode("utf-8").rstrip())["statusCheckRollup"][0]['status']
             print(workflow_status)
             continue
         elif workflow_status == "completed":
@@ -92,10 +89,8 @@ def push_workflow_status(push_workflow_id):
         print(push_workflow_status)
         if push_workflow_status =='queued':
             print(push_workflow_status)
-            # workflow_status = json.loads(subprocess.Popen(["gh", "pr", "view", pr_url, "--json", "statusCheckRollup"],stdout=subprocess.PIPE).communicate()[0].decode("utf-8").rstrip())["statusCheckRollup"][0]['status']
             continue
         elif push_workflow_status == "in_progress":
-            # workflow_status = json.loads(subprocess.Popen(["gh", "pr", "view", pr_url, "--json", "statusCheckRollup"],stdout=subprocess.PIPE).communicate()[0].decode("utf-8").rstrip())["statusCheckRollup"][0]['status']
             print(push_workflow_status)
             continue
         elif push_workflow_status == "completed":
@@ -129,11 +124,9 @@ git_push()
 
 layer_pr = subprocess.Popen(["gh", "pr", "create", "-t created a new project set", "-b created a new project set using provisonor script", "-rsvalmiki1102"],stdout=subprocess.PIPE).communicate()[0] 
 pr_url = layer_pr.decode("utf-8").rstrip() 
-# print(layer_pr_url)
 print ('Pull_request for layers created successfully')
 # #Sleep for 5 sec after pull request is created so the actions will register
 time.sleep(5) #Sleep for 5 secs
-# print(type(layer_pr))
 print(pr_url)
 
 workflow_id = str(json.loads(subprocess.Popen(["gh", "run", "list", "-b", checkout_branch_name, "-L", "1", "--json", "databaseId"],stdout=subprocess.PIPE).communicate()[0])[0]['databaseId'])
@@ -149,7 +142,3 @@ subprocess.run(f"git branch -D {checkout_branch_name}", shell=True)
 
 # Delete the branch remotely
 subprocess.run(f"git push origin --delete {checkout_branch_name}", shell=True)
-
-# git checkout master
-# git branch -d checkout_branch
-# git push origin

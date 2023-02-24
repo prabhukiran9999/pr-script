@@ -4,9 +4,9 @@ import json
 from subprocess import call
 import time
 from git import Repo
-pk_repo_path = "./"
+repo_path = "./"
 ATH_OF_GIT_REPO = r'.\.git' 
-repo = Repo(pk_repo_path)
+repo = Repo(repo_path)
 subprocess.run(["ls", "-l", "/dev/null"], capture_output=True)
 gh_version = call(["gh", "--version"])
 

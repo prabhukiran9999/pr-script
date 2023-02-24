@@ -61,16 +61,17 @@ step = "account-creation"
 def pr_workflow_status(workflow_id,pr_url):
     workflow_status = ""
     while workflow_status != "completed":
+        time.sleep(5)
         workflow_status = json.loads(subprocess.Popen(["gh", "run", "view", workflow_id, "--json", "status"],stdout=subprocess.PIPE).communicate()[0])['status']
-        print(workflow_status)
         if workflow_status =='queued':
-            print(f'workflow status for {step} is {workflow_status}')
+            print(f'pull request workflow status for {step} is {workflow_status}')
             continue
         elif workflow_status == "in_progress":
-            print(f'workflow status for {step} is {workflow_status}')
+            print(f'pull request workflow status for {step} is {workflow_status}')
             continue
         elif workflow_status == "completed":
-            print(f'workflow status for {step} is {workflow_status}')
+            print(f'pull request workflow status for {step} is {workflow_status}')
+            #Merge pull request when workflow is successful
             merge_pr = subprocess.call(["gh", "pr", "merge", pr_url, "--admin", "-m"])
             if merge_pr == 0:
                 print(f"Pull request,{pr_url} merged successfully")
@@ -86,16 +87,16 @@ def pr_workflow_status(workflow_id,pr_url):
 def push_workflow_status(push_workflow_id):
     push_workflow_status = ""
     while push_workflow_status != "completed":
+        time.sleep(5)
         push_workflow_status = json.loads(subprocess.Popen(["gh", "run", "view", push_workflow_id, "--json", "status"],stdout=subprocess.PIPE).communicate()[0])['status']
-        print(push_workflow_status)
         if push_workflow_status =='queued':
-            print(f'workflow status for {step} is {push_workflow_status}')
+            print(f'push workflow status for {step} is {push_workflow_status}')
             continue
         elif push_workflow_status == "in_progress":
-            print(f'workflow status for {step} is {push_workflow_status}')
+            print(f'push workflow status for {step} is {push_workflow_status}')
             continue
         elif push_workflow_status == "completed":
-            print(f'workflow status for {step} is {push_workflow_status}')
+            print(f'push workflow status for {step} is {push_workflow_status}')
             return push_workflow_status
         elif push_workflow_status =="failed":
             print("Push workflow failed")

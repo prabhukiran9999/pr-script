@@ -3,15 +3,28 @@ import os
 import json
 from subprocess import call
 import time
+import git
 from git import Repo
-repo_path = "./"
-repo = Repo(repo_path)
-
+# To do clone the repo
 #Get GH Cli version
 gh_version = call(["gh", "--version"])
 
 # Token to use GH CLI
 token = os.getenv("token")
+
+#Clone the Github repo
+org_name= "prabhukiran9999"
+repo_name = 'aws-ecf-forge-workspaces-settings-stack'
+repo_url = f'https://{token}@github.com/{org_name}/{repo_name}.git'
+
+repo_dir = os.path.join(os.getcwd(), repo_name)
+os.makedirs(repo_dir, exist_ok=True)
+
+# Clone the repository
+git.Repo.clone_from(repo_url, repo_dir, branch='main', depth=1)
+
+repo_path = f"./{repo_name}"
+repo = Repo(repo_path)
 
 # Execute the `gh auth login` command and provide your personal access token as input
 subprocess.run(["gh", "auth", "login", "--with-token"], input=f"{token}\n", text=True)

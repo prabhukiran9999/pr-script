@@ -29,6 +29,6 @@ def push_to_github(repo_path, commit_message, access_token, branch_name):
 repo_path = "."
 commit_message = "Commit message"
 access_token = os.getenv("token")
-branch_name = "modify-script"
+branch_name = "modify-scripts"
 push_to_github(repo_path, commit_message, access_token, branch_name)
 

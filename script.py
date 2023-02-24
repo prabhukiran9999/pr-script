@@ -3,7 +3,6 @@ import os
 import json
 from subprocess import call
 import time
-import git
 from git import Repo
 pk_repo_path = "./"
 ATH_OF_GIT_REPO = r'.\.git' 
@@ -11,12 +10,13 @@ repo = Repo(pk_repo_path)
 subprocess.run(["ls", "-l", "/dev/null"], capture_output=True)
 gh_version = call(["gh", "--version"])
 
-# Replace TOKEN with your personal access token
+# Token to use GH CLI
 token = os.getenv("token")
 
 # Execute the `gh auth login` command and provide your personal access token as input
 subprocess.run(["gh", "auth", "login", "--with-token"], input=f"{token}\n", text=True)
 
+# Execute project-set creation script
 try :
     subprocess.call(['./project_set_admin.sh'])
 except subprocess.CalledProcessError as e:
@@ -46,10 +46,9 @@ time.sleep(5)
 ## Create Pull reequest and sleep for 5 min
 create_pr = subprocess.Popen(["gh", "pr", "create", "-t created a new project set", "-b created a new project set using provisonor script", "-rsvalmiki1102"],stdout=subprocess.PIPE).communicate()[0] 
 pr_url = create_pr.decode("utf-8").rstrip() 
-print ('Pull_request created successfully')
+print (f'Pull_request for new project-set({checkout_branch_name}) accounts created successfully')
 #Sleep for 5 sec after pull request is created so the actions will register
 time.sleep(5) #Sleep for 5 secs
-print(type(create_pr))
 print(pr_url)
 
 # Check for pull request actions to complete
@@ -57,7 +56,7 @@ print(pr_url)
 check_pr = json.loads(subprocess.Popen(["gh", "pr", "view", pr_url, "--json", "statusCheckRollup"],stdout=subprocess.PIPE).communicate()[0].decode("utf-8").rstrip())
 print(check_pr)
 workflow_id = str(json.loads(subprocess.Popen(["gh", "run", "list", "-b", checkout_branch_name, "-L", "1", "--json", "databaseId"],stdout=subprocess.PIPE).communicate()[0])[0]['databaseId'])
-
+step = "account-creation"
 # Function to get the pull request workflow status and merge the PR once the workflow status are successful
 def pr_workflow_status(workflow_id,pr_url):
     workflow_status = ""
@@ -65,13 +64,13 @@ def pr_workflow_status(workflow_id,pr_url):
         workflow_status = json.loads(subprocess.Popen(["gh", "run", "view", workflow_id, "--json", "status"],stdout=subprocess.PIPE).communicate()[0])['status']
         print(workflow_status)
         if workflow_status =='queued':
-            print(workflow_status)
+            print(f'workflow status for {step} is {workflow_status}')
             continue
         elif workflow_status == "in_progress":
-            print(workflow_status)
+            print(f'workflow status for {step} is {workflow_status}')
             continue
         elif workflow_status == "completed":
-            print(workflow_status)
+            print(f'workflow status for {step} is {workflow_status}')
             merge_pr = subprocess.call(["gh", "pr", "merge", pr_url, "--admin", "-m"])
             if merge_pr == 0:
                 print(f"Pull request,{pr_url} merged successfully")
@@ -90,13 +89,13 @@ def push_workflow_status(push_workflow_id):
         push_workflow_status = json.loads(subprocess.Popen(["gh", "run", "view", push_workflow_id, "--json", "status"],stdout=subprocess.PIPE).communicate()[0])['status']
         print(push_workflow_status)
         if push_workflow_status =='queued':
-            print(push_workflow_status)
+            print(f'workflow status for {step} is {push_workflow_status}')
             continue
         elif push_workflow_status == "in_progress":
-            print(push_workflow_status)
+            print(f'workflow status for {step} is {push_workflow_status}')
             continue
         elif push_workflow_status == "completed":
-            print(push_workflow_status)
+            print(f'workflow status for {step} is {push_workflow_status}')
             return push_workflow_status
         elif push_workflow_status =="failed":
             print("Push workflow failed")
@@ -124,7 +123,7 @@ else:
     print("Push workflow for accounts failed")
 
 git_push()
-
+step = "layer-creation"
 layer_pr = subprocess.Popen(["gh", "pr", "create", "-t created a new project set", "-b created a new project set using provisonor script", "-rsvalmiki1102"],stdout=subprocess.PIPE).communicate()[0] 
 pr_url = layer_pr.decode("utf-8").rstrip() 
 print ('Pull_request for layers created successfully')

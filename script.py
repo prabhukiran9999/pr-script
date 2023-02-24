@@ -3,49 +3,32 @@ import os
 import json
 from subprocess import call
 import time
-import git
 from git import Repo
-# To do clone the repo
+repo_path = "./"
+# ATH_OF_GIT_REPO = r'.\.git' 
+repo = Repo(repo_path)
+subprocess.run(["ls", "-l", "/dev/null"], capture_output=True)
+
 #Get GH Cli version
 gh_version = call(["gh", "--version"])
 
 # Token to use GH CLI
 token = os.getenv("token")
-
-#Clone the Github repo
-org_name= "prabhukiran9999"
-repo_name = 'aws-ecf-forge-workspaces-settings-stack'
-repo_url = f'https://{token}@github.com/{org_name}/{repo_name}.git'
-
-repo_dir = os.path.join(os.getcwd(), repo_name)
-os.makedirs(repo_dir, exist_ok=True)
-
-# Clone the repository
-git.Repo.clone_from(repo_url, repo_dir, branch='main', depth=1)
-
-repo_path = f"./{repo_name}"
-repo = Repo(repo_path)
-
 # Execute the `gh auth login` command and provide your personal access token as input
 subprocess.run(["gh", "auth", "login", "--with-token"], input=f"{token}\n", text=True)
-
 # Execute project-set creation script
 try :
     subprocess.call(['./project_set_admin.sh'])
 except subprocess.CalledProcessError as e:
     print(e)
-
 # Get the project-set name created
 project_Set_info = subprocess.Popen(["git", "ls-files", "--others", "--directory", "--exclude-standard"],stdout=subprocess.PIPE).communicate()[0].decode("utf-8").rstrip()
 checkout_branch_name = project_Set_info.strip("/")
 print(checkout_branch_name)
-
 #Create a new branch with the name of the project set created
 checkout_branch = repo.git.checkout('-b', checkout_branch_name)
-
 # Commit message for Push
 COMMIT_MESSAGE = 'comment from python script'
-
 def git_push():
     branch = checkout_branch_name
     repo = Repo('.')
@@ -55,7 +38,6 @@ def git_push():
     
 git_push()
 time.sleep(5)
-
 ## Create Pull reequest and sleep for 5 min
 create_pr = subprocess.Popen(["gh", "pr", "create", "-t created a new project set", "-b created a new project set using provisonor script", "-rsvalmiki1102"],stdout=subprocess.PIPE).communicate()[0] 
 pr_url = create_pr.decode("utf-8").rstrip() 
@@ -63,9 +45,7 @@ print (f'Pull_request for new project-set({checkout_branch_name}) accounts creat
 #Sleep for 5 sec after pull request is created so the actions will register
 time.sleep(5) #Sleep for 5 secs
 print(pr_url)
-
 # Check for pull request actions to complete
-
 check_pr = json.loads(subprocess.Popen(["gh", "pr", "view", pr_url, "--json", "statusCheckRollup"],stdout=subprocess.PIPE).communicate()[0].decode("utf-8").rstrip())
 print(check_pr)
 workflow_id = str(json.loads(subprocess.Popen(["gh", "run", "list", "-b", checkout_branch_name, "-L", "1", "--json", "databaseId"],stdout=subprocess.PIPE).communicate()[0])[0]['databaseId'])
@@ -95,7 +75,6 @@ def pr_workflow_status(workflow_id,pr_url):
         elif workflow_status =="failed":
             print("Push workflow failed")
             break
-
 # Function to get the Push workflow status
 def push_workflow_status(push_workflow_id):
     push_workflow_status = ""
@@ -114,15 +93,11 @@ def push_workflow_status(push_workflow_id):
         elif push_workflow_status =="failed":
             print("Push workflow failed")
             return push_workflow_status
-
 pr_workflow_status(workflow_id,pr_url)
 time.sleep(5)
-
 push_workflow_id = str(json.loads(subprocess.Popen(["gh", "run", "list", "-b", "main", "-L", "1", "--json", "databaseId"],stdout=subprocess.PIPE).communicate()[0])[0]['databaseId'])
-
 push_status = push_workflow_status(push_workflow_id)
 print(push_status)
-
 # Create layers if push workflow status are succesfull
 if push_status == "completed":
     try :
@@ -135,27 +110,22 @@ if push_status == "completed":
         print(e)
 else:
     print("Push workflow for accounts failed")
-
 git_push()
 step = "layer-creation"
 layer_pr = subprocess.Popen(["gh", "pr", "create", "-t created a new project set", "-b created a new project set using provisonor script", "-rsvalmiki1102"],stdout=subprocess.PIPE).communicate()[0] 
 pr_url = layer_pr.decode("utf-8").rstrip() 
 print ('Pull_request for layers created successfully')
-
 # #Sleep for 5 sec after pull request is created so the actions will register
 time.sleep(5) #Sleep for 5 secs
 print(pr_url)
-
 workflow_id = str(json.loads(subprocess.Popen(["gh", "run", "list", "-b", checkout_branch_name, "-L", "1", "--json", "databaseId"],stdout=subprocess.PIPE).communicate()[0])[0]['databaseId'])
 pr_workflow_status(workflow_id,pr_url)
 time.sleep(5)
 push_workflow_id = str(json.loads(subprocess.Popen(["gh", "run", "list", "-b", "main", "-L", "1", "--json", "databaseId"],stdout=subprocess.PIPE).communicate()[0])[0]['databaseId'])
 push_status = push_workflow_status(push_workflow_id)
 print(push_status)
-
 #Checkout to main and  Delete the branch locally
 subprocess.run(f"git checkout main", shell=True)
 subprocess.run(f"git branch -D {checkout_branch_name}", shell=True)
-
 # Delete the branch remotely
 subprocess.run(f"git push origin --delete {checkout_branch_name}", shell=True)

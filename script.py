@@ -5,9 +5,9 @@ from subprocess import call
 import time
 from git import Repo
 repo_path = "./"
-# ATH_OF_GIT_REPO = r'.\.git' 
 repo = Repo(repo_path)
-subprocess.run(["ls", "-l", "/dev/null"], capture_output=True)
+
+#Get GH Cli version
 gh_version = call(["gh", "--version"])
 
 # Token to use GH CLI

@@ -11,10 +11,10 @@ jobs:
     - name: Sleep for 30 seconds
       uses: jakejarvis/wait-action@master
       with:
-        time: '30s'
+        time: '45s'
     - uses: actions/checkout@v1
     - name: Run a one-line script
-      run: echo Hello, world!
+      run: cd ./whatever
     - name: Run a multi-line script
       run: |
         echo Add other actions to build,

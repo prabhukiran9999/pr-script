@@ -1,0 +1,28 @@
+{
+  "identifier": "zcz4sb",
+  "name": "example glossary",
+  "accounts": [
+    	{
+      "name": "Tools",
+      "environment": "tools"
+    } ,
+	{
+      "name": "Development",
+      "environment": "dev"
+    } ,
+	{
+      "name": "Test",
+      "environment": "test"
+    } ,
+	{
+      "name": "Production",
+      "environment": "prod"
+    } 
+  ],
+  "tags": {
+    "admin_contact_email": "prabhu.manchineella@gov.bc.ca",
+    "admin_contact_name": "juliansubda",
+    "billing_group": "yaqtn"
+  }
+}
+

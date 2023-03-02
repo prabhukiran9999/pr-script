@@ -1,0 +1,28 @@
+{
+  "identifier": "ynyhq0",
+  "name": "BC E SUBSTANCES REPORTING BCER",
+  "accounts": [
+    	{
+      "name": "Tools",
+      "environment": "tools"
+    } ,
+	{
+      "name": "Development",
+      "environment": "dev"
+    } ,
+	{
+      "name": "Test",
+      "environment": "test"
+    } ,
+	{
+      "name": "Production",
+      "environment": "prod"
+    } 
+  ],
+  "tags": {
+    "admin_contact_email": "Kevin.Scott@gov.bc.ca",
+    "admin_contact_name": "Kevin Scott",
+    "billing_group": "p4bfn"
+  }
+}
+

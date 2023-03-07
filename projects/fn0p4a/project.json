@@ -1,0 +1,28 @@
+{
+  "identifier": "fn0p4a",
+  "name": "Project Registry Automation",
+  "accounts": [
+    	{
+      "name": "Tools",
+      "environment": "tools"
+    } ,
+	{
+      "name": "Development",
+      "environment": "dev"
+    } ,
+	{
+      "name": "Test",
+      "environment": "test"
+    } ,
+	{
+      "name": "Production",
+      "environment": "prod"
+    } 
+  ],
+  "tags": {
+    "admin_contact_email": "olena.mitovska@gov.bc.ca",
+    "admin_contact_name": "Olena Mitovska",
+    "billing_group": "yaqtn"
+  }
+}
+

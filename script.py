@@ -18,6 +18,7 @@ token = os.getenv("token")
 subprocess.run(["gh", "auth", "login", "--with-token"], input=f"{token}\n", text=True)
 # Execute project-set creation script
 try :
+    os.chdir('/bin')
     subprocess.call(['./project_set_admin.sh'])
 except subprocess.CalledProcessError as e:
     print(e)
@@ -56,14 +57,15 @@ def pr_workflow_status(workflow_id,pr_url):
     while workflow_status != "completed":
         time.sleep(5)
         workflow_status = json.loads(subprocess.Popen(["gh", "run", "view", workflow_id, "--json", "status"],stdout=subprocess.PIPE).communicate()[0])['status']
+        workflow_conclusion = json.loads(subprocess.Popen(["gh", "run", "view", workflow_id, "--json", "conclusion"],stdout=subprocess.PIPE).communicate()[0])['conclusion']
         if workflow_status =='queued':
             print(f'pull request workflow status for {step} is {workflow_status}')
             continue
         elif workflow_status == "in_progress":
             print(f'pull request workflow status for {step} is {workflow_status}')
             continue
-        elif workflow_status == "completed":
-            print(f'pull request workflow status for {step} is {workflow_status}')
+        elif workflow_status == "completed" and workflow_conclusion == "success":
+            print(f'pull request workflow status for {step} is {workflow_status} and the is {workflow_conclusion}')
             #Merge pull request when workflow is successful
             merge_pr = subprocess.call(["gh", "pr", "merge", pr_url, "--admin", "-m"])
             if merge_pr == 0:
@@ -72,7 +74,7 @@ def pr_workflow_status(workflow_id,pr_url):
             else:
                 print(f"problem merging a PR,{pr_url}")
             break
-        elif workflow_status =="failed":
+        elif workflow_status =="completed" and workflow_conclusion == "failure":
             print("Push workflow failed")
             break
 # Function to get the Push workflow status
@@ -81,16 +83,17 @@ def push_workflow_status(push_workflow_id):
     while push_workflow_status != "completed":
         time.sleep(5)
         push_workflow_status = json.loads(subprocess.Popen(["gh", "run", "view", push_workflow_id, "--json", "status"],stdout=subprocess.PIPE).communicate()[0])['status']
+        push_workflow_conclusion = json.loads(subprocess.Popen(["gh", "run", "view", workflow_id, "--json", "conclusion"],stdout=subprocess.PIPE).communicate()[0])['conclusion']
         if push_workflow_status =='queued':
             print(f'push workflow status for {step} is {push_workflow_status}')
             continue
         elif push_workflow_status == "in_progress":
             print(f'push workflow status for {step} is {push_workflow_status}')
             continue
-        elif push_workflow_status == "completed":
+        elif push_workflow_status == "completed" and push_workflow_conclusion == "success":
             print(f'push workflow status for {step} is {push_workflow_status}')
             return push_workflow_status
-        elif push_workflow_status =="failed":
+        elif push_workflow_status == "completed" and push_workflow_conclusion == "failure":
             print("Push workflow failed")
             return push_workflow_status
 pr_workflow_status(workflow_id,pr_url)
